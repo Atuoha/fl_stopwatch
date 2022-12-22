@@ -3,10 +3,10 @@ import 'package:flutter/services.dart';
 import 'constants/color.dart';
 import 'home_screen.dart';
 
-void main() => runApp(const StopWatch());
+void main() => runApp(const MainApp());
 
-class StopWatch extends StatelessWidget {
-  const StopWatch({super.key});
+class MainApp extends StatelessWidget {
+  const MainApp({super.key});
 
   @override
   Widget build(BuildContext context) {

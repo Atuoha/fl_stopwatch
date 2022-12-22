@@ -1,6 +1,6 @@
 # fl_stopwatch
 
-A stopwatch using flutter.
+A stopwatch and countdown timer using flutter.
 
 ## Getting Started
 
