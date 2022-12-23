@@ -19,11 +19,12 @@ class _CountDownState extends State<CountDown> {
   final ConfettiController confettiController = ConfettiController();
   Duration duration = const Duration();
   Timer? timer;
-  int seconds = 0;
+  int seconds = 1;
   bool isFirstRun = true;
   bool isStarted = false;
   bool isPlaying = false;
   bool isCompleted = false;
+  int maxValue = 100;
 
   @override
   void initState() {
@@ -42,6 +43,7 @@ class _CountDownState extends State<CountDown> {
     setState(() {
       if (duration.inSeconds != 0) {
         duration -= const Duration(seconds: 1);
+        seconds--;
       } else {
         setState(() {
           isCompleted = true;
@@ -89,7 +91,7 @@ class _CountDownState extends State<CountDown> {
       isPlaying = false;
       isStarted = false;
       isCompleted = false;
-      seconds = 0;
+      seconds = 1;
       duration = Duration(seconds: seconds);
     });
     timer!.cancel();
@@ -120,42 +122,78 @@ class _CountDownState extends State<CountDown> {
                     ),
                     const Text(
                       'Count Down Completed! 🎉🎊',
-                      style: TextStyle(fontSize: 20),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Duration: $seconds seconds',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ],
                 )
-              : Text(
-                  'Seconds: ${duration.inSeconds}',
-                  style: const TextStyle(fontSize: 50),
-                ),
+              : SizedBox(
+            height:200,
+                width: 200,
+                child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      CircularProgressIndicator(
+                        strokeWidth: 25,
+                        value: seconds/maxValue,
+                        color: accentColor,
+                        backgroundColor:  litePrimary,
+                      ),
+                      Center(
+                        child: Text(
+                          '${duration.inSeconds}',
+                          style: const TextStyle(
+                            fontSize: 75,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+              ),
           const SizedBox(height: 30),
           if (isStarted) ...[
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                BuildElevatedButton(
-                  icon: Icons.restart_alt,
-                  title: 'Restart',
-                  fnc: () => restartCountDown(),
-                ),
-                const SizedBox(width: 10),
-                BuildElevatedButton(
-                  icon: isPlaying
-                      ? Icons.stop_circle_outlined
-                      : Icons.play_circle,
-                  title: isPlaying ? 'Stop' : 'Play',
-                  fnc: () => isPlaying
-                      ? stopCountDown()
-                      : startCountDown(),
-                ),
-                const SizedBox(width: 10),
-                isPlaying
-                    ? BuildElevatedButton(
-                        icon: Icons.cancel,
-                        title: 'Cancel',
-                        fnc: () => cancelCountDown(),
-                      )
-                    : const SizedBox.shrink(),
+                if (isCompleted) ...[
+                  BuildElevatedButton(
+                    icon: Icons.check_circle,
+                    title: 'Start a new one',
+                    fnc: () => cancelCountDown(),
+                  )
+                ] else ...[
+                  BuildElevatedButton(
+                    icon: Icons.restart_alt,
+                    title: 'Restart',
+                    fnc: () => restartCountDown(),
+                  ),
+                  const SizedBox(width: 10),
+                  BuildElevatedButton(
+                    icon: isPlaying
+                        ? Icons.stop_circle_outlined
+                        : Icons.play_circle,
+                    title: isPlaying ? 'Stop' : 'Play',
+                    fnc: () => isPlaying ? stopCountDown() : startCountDown(),
+                  ),
+                  const SizedBox(width: 10),
+                  isPlaying
+                      ? BuildElevatedButton(
+                          icon: Icons.cancel,
+                          title: 'Cancel',
+                          fnc: () => cancelCountDown(),
+                        )
+                      : const SizedBox.shrink(),
+                ]
               ],
             )
           ] else ...[
@@ -168,8 +206,8 @@ class _CountDownState extends State<CountDown> {
             NumberPicker(
               axis: Axis.horizontal,
               value: seconds,
-              minValue: 0,
-              maxValue: 100,
+              minValue: 1,
+              maxValue: maxValue,
               textStyle: const TextStyle(fontSize: 18),
               selectedTextStyle: const TextStyle(
                 fontSize: 35,

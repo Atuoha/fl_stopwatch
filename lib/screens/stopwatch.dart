@@ -64,11 +64,11 @@ class _StopWatchState extends State<StopWatch> {
     });
   }
 
-  // @override
-  // void dispose() {
-  //   super.dispose();
-  //   timer!.cancel();
-  // }
+  @override
+  void dispose() {
+    super.dispose();
+    timer?.cancel();
+  }
 
   @override
   Widget build(BuildContext context) {
