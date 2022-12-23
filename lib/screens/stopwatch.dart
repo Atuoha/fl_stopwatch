@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../constants/color.dart';
+import '../widgets/build_elevated_button.dart';
 
 class StopWatch extends StatefulWidget {
   const StopWatch({Key? key}) : super(key: key);
@@ -63,6 +64,12 @@ class _StopWatchState extends State<StopWatch> {
     });
   }
 
+  // @override
+  // void dispose() {
+  //   super.dispose();
+  //   timer!.cancel();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -105,13 +112,13 @@ class _StopWatchState extends State<StopWatch> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               if (timerRunningStatus) ...[
-                buildElevatedButton(
+                BuildElevatedButton(
                   icon: Icons.restart_alt,
                   title: 'Restart',
                   fnc: () => restartTimer(),
                 ),
                 const SizedBox(width: 10),
-                buildElevatedButton(
+                BuildElevatedButton(
                   icon: timerStarted
                       ? Icons.stop_circle_outlined
                       : Icons.play_circle,
@@ -122,14 +129,14 @@ class _StopWatchState extends State<StopWatch> {
                 ),
                 const SizedBox(width: 10),
                 timerStarted
-                    ? buildElevatedButton(
+                    ? BuildElevatedButton(
                         icon: Icons.cancel,
                         title: 'Cancel',
                         fnc: () => cancelTimer(),
                       )
                     : const SizedBox.shrink(),
               ] else ...[
-                buildElevatedButton(
+                BuildElevatedButton(
                   icon: Icons.play_circle,
                   title: 'Start Stopwatch',
                   fnc: () => startTimer(isFirstRun: true),
@@ -141,31 +148,6 @@ class _StopWatchState extends State<StopWatch> {
       ),
     );
   }
-
-  Directionality buildElevatedButton({
-    required IconData icon,
-    required String title,
-    required Function fnc,
-  }) =>
-      Directionality(
-        textDirection: TextDirection.rtl,
-        child: ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: accentColor,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
-            ),
-          ),
-          icon: Icon(icon),
-          onPressed: () => fnc(),
-          label: Text(
-            title,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      );
 
   Column timerBox({
     required String time,
